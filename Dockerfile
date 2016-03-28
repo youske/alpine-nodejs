@@ -7,7 +7,7 @@ MAINTAINER youske miyakoshi <youske@gmail.com>
 ENV PATH=/opt/conda/bin:$PATH \
     LANG=C.UTF-8 \
     GOSU=https://github.com/tianon/gosu/releases/download/1.7/gosu-amd64 \
-    APKINSTALL='bash wget nodejs libstdc++'
+    APKINSTALL='bash wget nodejs nodejs-dev python git libstdc++'
 
 RUN adduser -D -h /home/admin -s /bin/bash admin admin && \
     apk add --no-cache $APKINSTALL && \
