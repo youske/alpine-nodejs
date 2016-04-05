@@ -1,4 +1,10 @@
 .git
 .gitignore
-LICENSE
+LICENSE*
 README*
+
+.tags
+*.swp
+*.lck
+*.*~
+*~
