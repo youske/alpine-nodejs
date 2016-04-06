@@ -21,8 +21,9 @@ RUN wget -q --no-check-certificate ${ENTRYKIT_DOWNLOAD} -O- | tar zx && \
     chmod +x /entrykit && mv /entrykit /bin && /bin/entrykit --symlink
 
 COPY package.json /package.json
-RUN npm install -g pm2
-# RUN apk del dlpack --no-cache && rm -rf /tmp/* /var/cache/apk/*
+RUN npm install -g gulp pm2 forever
+
+RUN apk del buildpack --no-cache && rm -rf /tmp/* /var/cache/apk/*
 
 RUN adduser -D -h /home/admin -s /bin/bash admin admin
 
