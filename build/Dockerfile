@@ -4,6 +4,9 @@
 FROM alpine:latest
 MAINTAINER youske miyakoshi <youske@gmail.com>
 
+LABEL com.geeplus.description="alpine nodejs image" \
+      com.geeplus.role="baseimage"
+
 ENV ENTRYKIT_VERSION=0.4.0
 ENV ENTRYKIT_FILE=entrykit_${ENTRYKIT_VERSION}_Linux_x86_64.tgz
 ENV ENTRYKIT_DOWNLOAD=https://github.com/progrium/entrykit/releases/download/v${ENTRYKIT_VERSION}/${ENTRYKIT_FILE}
