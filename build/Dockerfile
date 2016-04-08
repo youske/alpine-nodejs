@@ -17,10 +17,10 @@ ENV GOSU_DOWNLOAD=https://github.com/tianon/gosu/releases/download/${GOSU_VERSIO
 ENV PATH=$PATH \
     LANG=C.UTF-8 \
     WORK_DIR=/home/admin \
-    PACKAGE='bash nodejs python libstdc++' \
-    BUILDPACK='wget ca-certificates build-base linux-headers musl-dev git nodejs-dev'
+    PACKAGE='bash nodejs ca-certificates' \
+    BUILDPACK='wget build-base linux-headers musl-dev git nodejs-dev'
 
-RUN apk add ${PACKAGE} --no-cache && apk add ${BUILDPACK} --no-cache -t buildpack
+RUN apk update --no-cache && apk add ${PACKAGE} --no-cache && apk add ${BUILDPACK} --no-cache -t buildpack
 
 # entrykit install
 RUN wget -q --no-check-certificate ${ENTRYKIT_DOWNLOAD} -O- | tar zx && \
