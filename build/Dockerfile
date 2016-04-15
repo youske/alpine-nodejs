@@ -24,7 +24,7 @@ RUN apk update --no-cache && apk add ${PACKAGE} --no-cache && apk add ${BUILDPAC
 
 # entrykit install
 RUN wget -q --no-check-certificate ${ENTRYKIT_DOWNLOAD} -O- | tar zx && \
-    chmod +x /entrykit && mv /entrykit /bin && /bin/entrykit --symlink
+    chmod +x /entrykit && mv /entrykit /usr/bin && /usr/bin/entrykit --symlink
 
 # gosu
 RUN wget -q --no-check-certificate ${GOSU_DOWNLOAD} -O /usr/bin/gosu && chmod +x /usr/bin/gosu
@@ -39,4 +39,4 @@ RUN adduser -D -h /home/admin -s /bin/bash admin admin
 EXPOSE 3000 8000 8080 8088
 
 WORKDIR ${WORK_DIR}
-CMD ["bash"]
+CMD ["/bin/bash"]

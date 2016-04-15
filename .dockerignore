@@ -1,6 +1,10 @@
-.gitignore
-.gitkeep
-.gitattribute
+#
+node_modules/
+vendor/
+tests/
+
+#
+.git*
 .sync-config.cson
 .remote-sync.json
 LICENSE*
@@ -8,6 +12,7 @@ README*
 
 .tags
 *.swp
+*.lock
 *.lck
 *.*~
 *~
