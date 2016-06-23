@@ -1,11 +1,15 @@
 # Alpine Linux with nodejs
-# alpine based
 
 FROM alpine:latest
 MAINTAINER youske miyakoshi <youske@gmail.com>
 
 LABEL com.geeplus.description="alpine nodejs image" \
       com.geeplus.role="baseimage"
+
+# s6-overlay
+ENV S6OVERLAY_VERSION="v1.11.0.1"
+ENV S6OVERLAY_URL="https://github.com/just-containers/s6-overlay/releases/download/${S6OVERLAY_VERSION}/s6-overlay-amd64.tar.gz"
+ADD ${S6OVERLAY_URL} /tmp/
 
 ENV ENTRYKIT_VERSION=0.4.0
 ENV ENTRYKIT_FILE=entrykit_${ENTRYKIT_VERSION}_Linux_x86_64.tgz
@@ -20,6 +24,8 @@ ENV PATH=$PATH \
     PACKAGE='bash nodejs ca-certificates' \
     BUILDPACK='wget build-base linux-headers musl-dev git nodejs-dev'
 
+RUN adduser -D -h /home/admin -s /bin/bash admin admin
+
 RUN apk update --no-cache && apk add ${PACKAGE} --no-cache && apk add ${BUILDPACK} --no-cache -t buildpack
 
 # entrykit install
@@ -29,14 +35,18 @@ RUN wget -q --no-check-certificate ${ENTRYKIT_DOWNLOAD} -O- | tar zx && \
 # gosu
 RUN wget -q --no-check-certificate ${GOSU_DOWNLOAD} -O /usr/bin/gosu && chmod +x /usr/bin/gosu
 
+# s6-overlay
+RUN tar zxf /tmp/s6-overlay-amd64.tar.gz -C /
+
 COPY package.json /package.json
 RUN npm install -g gulp pm2 forever
 
+
+
 RUN apk del buildpack --no-cache && rm -rf /tmp/* /var/cache/apk/*
 
-RUN adduser -D -h /home/admin -s /bin/bash admin admin
+#EXPOSE 3000 8000 8080 8088
 
-EXPOSE 3000 8000 8080 8088
-
-WORKDIR ${WORK_DIR}
+#WORKDIR ${WORK_DIR}
+ENTRYPOINT ["switch","shell=/bin/bash","--","/init"]
 CMD ["/bin/bash"]
