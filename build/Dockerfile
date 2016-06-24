@@ -26,7 +26,10 @@ ENV PATH=$PATH \
 
 RUN adduser -D -h /home/admin -s /bin/bash admin admin
 
-RUN apk update --no-cache && apk add ${PACKAGE} --no-cache && apk add ${BUILDPACK} --no-cache -t buildpack
+RUN apk update --no-cache && \
+    apk upgrade --no-cache && \
+    apk add ${PACKAGE} --no-cache && \
+    apk add ${BUILDPACK} --no-cache -t buildpack
 
 # entrykit install
 RUN wget -q --no-check-certificate ${ENTRYKIT_DOWNLOAD} -O- | tar zx && \
@@ -38,14 +41,14 @@ RUN wget -q --no-check-certificate ${GOSU_DOWNLOAD} -O /usr/bin/gosu && chmod +x
 # s6-overlay
 RUN tar zxf /tmp/s6-overlay-amd64.tar.gz -C /
 
+
+
 COPY package.json /package.json
-RUN npm install -g gulp pm2 forever
+#RUN npm install -g gulp pm2 forever
 
 
 
 RUN apk del buildpack --no-cache && rm -rf /tmp/* /var/cache/apk/*
-
-#EXPOSE 3000 8000 8080 8088
 
 #WORKDIR ${WORK_DIR}
 ENTRYPOINT ["switch","shell=/bin/bash","--","/init"]
