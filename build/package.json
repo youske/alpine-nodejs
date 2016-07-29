@@ -5,5 +5,10 @@
   "author": "youske miyakoshi <youske@gmail.com>",
   "scripts": {
     "preinstall": "pm2"
+  },
+  "dependencies": {
+    "gulp" : "latest",
+    "pm2" : "latest",
+    "forever" : "latest"
   }
 }

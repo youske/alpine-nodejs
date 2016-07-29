@@ -43,8 +43,9 @@ RUN tar zxf /tmp/s6-overlay-amd64.tar.gz -C /
 
 
 
-COPY package.json /package.json
-#RUN npm install -g gulp pm2 forever
+COPY package.json /tmp/package.json
+RUN cd /tmp && npm install -g
+# gulp pm2 forever
 
 
 
