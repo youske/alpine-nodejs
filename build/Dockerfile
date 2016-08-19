@@ -1,56 +1,14 @@
 # Alpine Linux with nodejs
 
-FROM alpine:latest
+FROM youske/alpine-stdmachine:base
 MAINTAINER youske miyakoshi <youske@gmail.com>
 
-LABEL com.geeplus.description="alpine nodejs image" \
-      com.geeplus.role="baseimage"
-
-# s6-overlay
-ENV S6OVERLAY_VERSION="v1.11.0.1"
-ENV S6OVERLAY_URL="https://github.com/just-containers/s6-overlay/releases/download/${S6OVERLAY_VERSION}/s6-overlay-amd64.tar.gz"
-ADD ${S6OVERLAY_URL} /tmp/
-
-ENV ENTRYKIT_VERSION=0.4.0
-ENV ENTRYKIT_FILE=entrykit_${ENTRYKIT_VERSION}_Linux_x86_64.tgz
-ENV ENTRYKIT_DOWNLOAD=https://github.com/progrium/entrykit/releases/download/v${ENTRYKIT_VERSION}/${ENTRYKIT_FILE}
-
-ENV GOSU_VERSION=1.7
-ENV GOSU_DOWNLOAD=https://github.com/tianon/gosu/releases/download/${GOSU_VERSION}/gosu-amd64
-
-ENV PATH=$PATH \
-    LANG=C.UTF-8 \
-    WORK_DIR=/home/admin \
-    PACKAGE='bash nodejs ca-certificates' \
-    BUILDPACK='wget build-base linux-headers musl-dev git nodejs-dev'
-
-RUN adduser -D -h /home/admin -s /bin/bash admin admin
-
-RUN apk update --no-cache && \
-    apk upgrade --no-cache && \
-    apk add ${PACKAGE} --no-cache && \
-    apk add ${BUILDPACK} --no-cache -t buildpack
-
-# entrykit install
-RUN wget -q --no-check-certificate ${ENTRYKIT_DOWNLOAD} -O- | tar zx && \
-    chmod +x /entrykit && mv /entrykit /usr/bin && /usr/bin/entrykit --symlink
-
-# gosu
-RUN wget -q --no-check-certificate ${GOSU_DOWNLOAD} -O /usr/bin/gosu && chmod +x /usr/bin/gosu
-
-# s6-overlay
-RUN tar zxf /tmp/s6-overlay-amd64.tar.gz -C /
-
-
+LABEL com.stdmachine.description="alpine nodejs image" \
+      com.stdmachine.role="nodejs image"
 
 COPY package.json /tmp/package.json
-RUN cd /tmp && npm install -g
-# gulp pm2 forever
 
-
-
-RUN apk del buildpack --no-cache && rm -rf /tmp/* /var/cache/apk/*
-
-#WORKDIR ${WORK_DIR}
-ENTRYPOINT ["switch","shell=/bin/bash","--","/init"]
-CMD ["/bin/bash"]
+RUN apk add nodejs --no-cache && \
+    apk add build-base linux-headers musl-dev nodejs-dev --no-cache -t buildpack && \
+    cd /tmp && npm install -g && \
+    apk del buildpack --no-cache && rm -rf /tmp/* /var/cache/apk/* /root/.wget-hsts
